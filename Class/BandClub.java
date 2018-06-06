@@ -8,7 +8,7 @@ public class BandClub {
         Connection connection = null;
         Statement stmt = null;
         Scanner scanner = new Scanner(System.in);
-        String id, name, sex, phone, email, instrument, changefield, changevalue, type, order;
+        String id, name, sex, phone, email, instrument, changefield, changevalue, type, order, itembytopic;
         boolean fee;
         boolean wantexit = true;
         int isin;
@@ -88,10 +88,18 @@ public class BandClub {
                     }
 
                     System.out.println("What do you want to change?");
-                    System.out.print("(Name or Sex or Phone or Email or Instrument or fee) : ");
+                    System.out.print("(Phone or Email or Instrument or fee) : ");
                     changefield = scanner.next();
 
-                    if(changefield.equalsIgnoreCase("fee")){
+                    if(changefield.equalsIgnoreCase("name")
+                             || changefield.equalsIgnoreCase("id")
+                             || changefield.equalsIgnoreCase("sex")){
+                        System.out.println("Can't modify that field!!");
+                        break;
+                    }
+
+
+                    else if(changefield.equalsIgnoreCase("fee")){
                         System.out.println("What value?(true or false) : ");
                         fee = scanner.nextBoolean();
                         System.out.println("Are you sure change this data?");
@@ -100,6 +108,8 @@ public class BandClub {
                         if(type.equalsIgnoreCase("yes"))
                             ModifyDB.Modify(connection, stmt, fee, id);
                     }
+
+
                     else {
                         System.out.println("What value? : ");
                         changevalue = scanner.next();
@@ -141,16 +151,24 @@ public class BandClub {
                 //Search
                 case 4:
 
-                    System.out.println("Type? (All, ID, Instrument, Name, Sex)");
+                    System.out.println("Type? (All, ID, Instrument, Name, Sex, Item by Topic)");
                     System.out.print("Type : ");
-                    type = scanner.next();
+                    scanner.nextLine();
+                    type = scanner.nextLine();
+
 
                     if(type.equalsIgnoreCase("all"))
                         SearchDB.SearchAll(connection, stmt);
+
                     else if(type.equalsIgnoreCase("id")) {
                         System.out.print("ID : ");
                         id = scanner.next();
                         SearchDB.SearchByID(connection, stmt, id);
+                    }
+                    else if(type.equalsIgnoreCase("item by topic")){
+                        System.out.println("Input : ");
+                        itembytopic = scanner.nextLine();
+                        SearchDB.SearchByTopic(connection, stmt, itembytopic);
                     }
 
                     else if(type.equalsIgnoreCase("instrument")){
@@ -170,7 +188,7 @@ public class BandClub {
                     }
 
                     else{
-                        System.out.println("Please input write Type.");
+                        System.out.println("Please input right Type.");
                     }
 
 
